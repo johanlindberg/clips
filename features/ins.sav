@@ -1,0 +1,5 @@
+([initial-object] of INITIAL-OBJECT)
+
+([a] of A
+   (x [a] 34))
+
