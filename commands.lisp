@@ -28,8 +28,10 @@
      (batch <file-name>)
 
    Doctests:
-   >> (batch \"batch-test.bat\")
+   >> (batch \"/Users/johanlindberg/Projects/cl-clips/batch-test.bat\")
+   -> TRUE
    TRUE
    "
-
-  FALSE)
+  (if (load filename :print t)
+      TRUE
+      FALSE))
