@@ -1,3 +1,6 @@
+;;;;              CL-CLIPS (a Common Lisp implementation of CLIPS)
+;;;; ===========================================================================
+
 (defpackage :clips-system
   (:use :cl :asdf))
 (in-package :clips-system)
