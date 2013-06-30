@@ -12,7 +12,7 @@
 
    Doctests:
    >> (assert (color red))
-   -> <Fact-0>
+   <Fact-0>
    "
   FALSE)
  
