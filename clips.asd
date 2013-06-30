@@ -11,4 +11,5 @@
   :author "Johan Lindberg (johan@pulp.se)"
   :licence "Public Domain"
   :components ((:file "clips")
+	       (:file "fact-functions" :depends-on ("clips"))
 	       (:file "commands" :depends-on ("clips"))))

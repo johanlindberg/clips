@@ -6,7 +6,13 @@
   (:export :TRUE
 	   :FALSE
 
-	   :batch))
+	   ; Fact functions [12.9]
+	   :assert
+	   :retract
+
+	   ; Commands
+	   :batch)
+  (:shadow :assert))
 (in-package :clips)
 
 (defconstant TRUE 'TRUE)

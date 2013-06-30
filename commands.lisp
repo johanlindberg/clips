@@ -4,7 +4,7 @@
 (in-package :clips)
 
 (defun batch (filename)
-  "Allows “batch” processing of CLIPS interactive commands by
+  "Allows 'batch' processing of CLIPS interactive commands by
    replacing standard input with the contents of a file.
 
    See CLIPS Basic Programming Guide '13.1.9 Executing Commands From
