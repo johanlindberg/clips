@@ -52,6 +52,8 @@
 
    >> <FACT-3>
    #S(COLOR :%MULTISLOT (BLUE))
+   >> <FACT-2>
+   #S(COLOR :%MULTISLOT (RED))
    "
   (let ((result '())
 	(fact-index -1))
