@@ -26,7 +26,7 @@
 
   `(progn
      (defstruct ,name %multislot)
-     (,(intern (concatenate 'string "MAKE-" (string name))) :%multislot ',multislot)))
+     (,(intern (format nil "MAKE-~A" name)) :%multislot ',multislot)))
 
 (defmacro assert (&rest rhs-patterns)
   "The assert action allows the user to add a fact to the fact‑list.
@@ -39,15 +39,26 @@
      (assert <RHS-pattern>+)
 
    Doctests:
+
+   >> (progn
+        (clrhash *working-memory*) ; Make sure to reset the working memory
+        (setf *fact-index* 0))     ; before running this test.
+   0
    >> (clips:assert (color red))
-   <Fact-0>
+   <Fact-1>
    "
-  (let ((result '()))
+  (let ((result '())
+	(fact-index -1))
     (mapcar
      #'(lambda (rhs-pattern)
+	 (setf fact-index (incf *fact-index*))
 	 (setf result
-	       (append `(setf (gethash ,(incf *fact-index*) *working-memory*)
+	       (append `(setf (gethash ,fact-index *working-memory*)
 			      (%make-implied-deftemplate ,(car rhs-pattern)
-							 ,(cdr rhs-pattern))))))
+							 ,(cdr rhs-pattern)))
+		       result)))
      rhs-patterns)
-  result))
+
+    `(progn
+       ,result
+       ',(intern (format nil "<FACT-~D>" fact-index)))))
