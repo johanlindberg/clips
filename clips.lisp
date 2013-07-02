@@ -45,10 +45,13 @@
         (setf *fact-index* 0))     ; before running this test.
    0
    >> (clips:assert (color red))
-   <Fact-1>
+   <FACT-1>
 
    >> (clips:assert (color red) (color blue))
-   <Fact-3>
+   <FACT-3>
+
+   >> <FACT-3>
+   #S(COLOR :%MULTISLOT (BLUE))
    "
   (let ((result '())
 	(fact-index -1))
@@ -57,9 +60,11 @@
 	 (setf fact-index (incf *fact-index*))
 	 (setf result
 	       (append result 
-		       `((setf (gethash ,fact-index *working-memory*)
-			       (%make-implied-deftemplate ,(car rhs-pattern)
-							  ,(cdr rhs-pattern)))))))
+		       `((defvar ,(intern (format nil "<FACT-~D>" fact-index))
+			   (%make-implied-deftemplate ,(car rhs-pattern)
+						      ,(cdr rhs-pattern)))
+			 (setf (gethash ,fact-index *working-memory*)
+			       ',(intern (format nil "<FACT-~D>" fact-index)))))))
      rhs-patterns)
 
     `(progn
