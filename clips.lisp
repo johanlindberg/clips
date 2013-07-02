@@ -46,6 +46,9 @@
    0
    >> (clips:assert (color red))
    <Fact-1>
+
+   >> (clips:assert (color red) (color blue))
+   <Fact-3>
    "
   (let ((result '())
 	(fact-index -1))
@@ -53,12 +56,12 @@
      #'(lambda (rhs-pattern)
 	 (setf fact-index (incf *fact-index*))
 	 (setf result
-	       (append `(setf (gethash ,fact-index *working-memory*)
-			      (%make-implied-deftemplate ,(car rhs-pattern)
-							 ,(cdr rhs-pattern)))
-		       result)))
+	       (append result 
+		       `((setf (gethash ,fact-index *working-memory*)
+			       (%make-implied-deftemplate ,(car rhs-pattern)
+							  ,(cdr rhs-pattern)))))))
      rhs-patterns)
 
     `(progn
-       ,result
+       ,@result
        ',(intern (format nil "<FACT-~D>" fact-index)))))
