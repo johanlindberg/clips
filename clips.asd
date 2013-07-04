@@ -10,5 +10,4 @@
   :version "0.0.0 alpha"
   :author "Johan Lindberg (johan@pulp.se)"
   :licence "Public Domain"
-  :components ((:file "clips")
-	       (:file "commands" :depends-on ("clips"))))
+  :components ((:file "clips")))
