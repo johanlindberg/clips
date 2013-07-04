@@ -12,7 +12,8 @@
 	   :retract
 
 	   ; Commands
-	   :batch))
+	   :batch
+	   :clear))
 (in-package :clips)
 
 (defconstant TRUE 'TRUE)
@@ -22,11 +23,36 @@
 (defvar *fact-index* 0)
 
 (defmacro %make-implied-deftemplate (name multislot)
-  "%make-implied-deftemplate constructs a defstruct with one multislot (%multislot)"
+  "%make-implied-deftemplate makes a defstruct with one multislot (%multislot)"
 
   `(progn
      (defstruct ,name %multislot)
      (,(intern (format nil "MAKE-~A" name)) :%multislot ',multislot)))
+
+(defun clear ()
+  "Clears CLIPS.
+
+   Removes all constructs  and all associated data structures (such as facts and
+   instances) from the CLIPS environment. A clear may be performed safely at any
+   time, however, certain constructs will not allow themselves to be deleted
+   while they are in use. For example, while deffacts are being reset (by the
+   reset command), it is not possible to remove them using the clear command.
+   Note that the clear command does not effect many environment characteristics
+   (such as the current conflict resolution strategy). This function has no
+   return value.
+
+   Syntax:
+     (clear)
+
+   Doctests:
+   >> (progn
+        (clips:assert (color red))
+        (clips:clear)
+        (hash-table-count *working-memory*))
+   0
+   "
+  nil)
+
 
 (defmacro assert (&rest rhs-patterns)
   "The assert action allows the user to add a fact to the fact‑list.
@@ -42,7 +68,7 @@
 
    >> (progn
         (clrhash *working-memory*) ; Make sure to reset the working memory
-        (setf *fact-index* 0))     ; before running this test.
+        (setf *fact-index* 0))     ; before running these tests.
    0
    >> (clips:assert (color red))
    <FACT-1>
