@@ -50,8 +50,14 @@
         (clips:clear)
         (hash-table-count *working-memory*))
    0
+   >> (clips:assert (color red))
+   <FACT-1>
    "
-  nil)
+  (clrhash *working-memory*)
+  ;; Even though not explicitly stated in the docs the
+  ;; clear command also resets the fact-index.
+  (setf *fact-index* 0)
+  (values))
 
 
 (defmacro assert (&rest rhs-patterns)
