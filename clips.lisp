@@ -13,7 +13,8 @@
 
 	   ; Commands
 	   :batch
-	   :clear))
+	   :clear
+	   :facts))
 (in-package :clips)
 
 (defconstant TRUE 'TRUE)
@@ -145,3 +146,34 @@
   (setf *fact-index* 0)
   (values))
 
+(defun facts ()
+  "Displays facts stored in the fact‑list.
+
+   If <module‑name> is not specified, then only facts visible to the current
+   module will be displayed. If <module‑name> is specified, then only facts
+   visible to the specified module are displayed. If the symbol * is used for
+   <module‑name>, then facts from any module may be displayed. If the start
+   argument is speci­fied, only facts with fact‑indices greater than or equal to
+   this argument are displayed. If the end argument is speci­fied, only facts
+   with fact‑indices less than or equal to this argument are displayed. If the
+   max argument is speci­fied, then no facts will be displayed beyond the
+   specified maximum number of facts to be displayed. This function has no
+   return value.
+
+   Syntax:
+     (facts [<module-name>]
+       [<start-integer-expression>
+        [<end-integer-expression>
+         [<max-integer-expression>]]])
+ 
+   Doctests:
+   >> (progn
+        (clips:clear)
+        (clips:assert (color red)) 
+        (clips:facts)
+        T)
+   -> |f-0     (initial-fact)
+       f-1     (color red)
+       For a total of 2 facts.|
+   T"
+  nil)
