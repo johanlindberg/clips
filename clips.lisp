@@ -29,9 +29,13 @@
 (defmacro %make-implied-deftemplate (name multislot)
   "%make-implied-deftemplate makes a defstruct with one multislot (%multislot)"
 
-  `(progn
-     (defstruct ,name %multislot)
-     (,(intern (format nil "MAKE-~A" name)) :%multislot ',multislot)))
+  (let ((print-function (intern (format nil "%PRINT-~A" name))))
+    `(progn
+       (defun ,print-function (object stream d)
+	 (declare (ignore object d))
+	 (format stream "(~A~{ ~S~})~%" ',name ',multislot))
+       (defstruct (,name (:print-function ,print-function)) %multislot)
+       (,(intern (format nil "MAKE-~A" name)) :%multislot ',multislot))))
 
 ;;; Fact functions
 ;;; ----------------------------------------------------------------------------
@@ -73,14 +77,14 @@
 	 (setf fact-index (incf *fact-index*))
 	 (setf result
 	       (append result
-		       ;; This defvar is specific to this implementation. The
-		       ;; symbol <FACT-n> does not point to a fact instance in
-		       ;; CLIPS.
-		       `((defvar ,(intern (format nil "<FACT-~D>" fact-index))
-			   (%make-implied-deftemplate ,(car rhs-pattern)
-						      ,(cdr rhs-pattern)))
-			 (setf (gethash ,fact-index *working-memory*)
-			       ',(intern (format nil "<FACT-~D>" fact-index)))))))
+		       ;; This defparameter is specific to this implementation.
+		       ;; The symbol <FACT-n> does not point to a fact instance
+		       ;; in CLIPS.
+		       `((setf (gethash ,fact-index *working-memory*)
+			       (%make-implied-deftemplate ,(car rhs-pattern)
+							  ,(cdr rhs-pattern)))
+			 (defparameter ,(intern (format nil "<FACT-~D>" fact-index))
+			   (gethash ,fact-index *working-memory*))))))
      rhs-patterns)
 
     `(progn
@@ -153,10 +157,10 @@
    module will be displayed. If <module‑name> is specified, then only facts
    visible to the specified module are displayed. If the symbol * is used for
    <module‑name>, then facts from any module may be displayed. If the start
-   argument is speci­fied, only facts with fact‑indices greater than or equal to
-   this argument are displayed. If the end argument is speci­fied, only facts
+   argument is specified, only facts with fact‑indices greater than or equal to
+   this argument are displayed. If the end argument is specified, only facts
    with fact‑indices less than or equal to this argument are displayed. If the
-   max argument is speci­fied, then no facts will be displayed beyond the
+   max argument is specified, then no facts will be displayed beyond the
    specified maximum number of facts to be displayed. This function has no
    return value.
 
@@ -176,4 +180,7 @@
        f-1     (color red)
        For a total of 2 facts.|
    T"
-  nil)
+  (maphash #'(lambda (key value)
+	       (format t "~&f-~A     ~S" key value))
+	   *working-memory*)
+  (values))
