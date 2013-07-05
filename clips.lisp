@@ -33,9 +33,23 @@
     `(progn
        (defun ,print-function (object stream d)
 	 (declare (ignore object d))
-	 (format stream "(~A~{ ~S~})~%" ',name ',multislot))
+	 (format stream "(~A~{ ~S~})" ',name ',multislot))
        (defstruct (,name (:print-function ,print-function)) %multislot)
        (,(intern (format nil "MAKE-~A" name)) :%multislot ',multislot))))
+
+(defmacro %make-initial-fact ()
+  `(progn
+     (defun print-initial-fact (object stream d)
+       (declare (ignore object d))
+       (format stream "(INITIAL-FACT)"))
+     (defstruct (initial-fact (:print-function print-initial-fact)))
+     (make-initial-fact)))
+
+(defmacro %insert-initial-fact ()
+  `(progn
+     (setf (gethash 0 *working-memory*)
+	   (%make-initial-fact))
+     (defparameter <FACT-0> (gethash 0 *working-memory*))))
 
 ;;; Fact functions
 ;;; ----------------------------------------------------------------------------
@@ -105,7 +119,7 @@
      (batch <file-name>)
 
    Doctests:
-   >> (batch \"/Users/johanlindberg/Projects/cl-clips/batch-test.bat\")
+   >> (batch \"/Users/johanlindberg/Projects/clips/batch-test.bat\")
    -> |TRUE
    42
    4
@@ -140,11 +154,12 @@
         (clips:assert (color red))
         (clips:clear)
         (hash-table-count *working-memory*))
-   0
+   1 ; This is the (initial-fact)
    >> (clips:assert (color red))
    <FACT-1>
    "
   (clrhash *working-memory*)
+  (%insert-initial-fact)
   ;; Even though not explicitly stated in the docs the
   ;; clear command also resets the fact-index.
   (setf *fact-index* 0)
@@ -183,4 +198,5 @@
   (maphash #'(lambda (key value)
 	       (format t "~&f-~A     ~S" key value))
 	   *working-memory*)
+  (format t "~&For a total of ~D facts." (hash-table-count *working-memory*))
   (values))
