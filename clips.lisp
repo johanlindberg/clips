@@ -105,6 +105,49 @@
        ,@result
        ',(intern (format nil "<FACT-~D>" fact-index)))))
 
+(defmacro retract (&rest retract-specifiers)
+  "The retract action allows the user to remove facts from the fact‑list.
+
+   Multiple facts may be retracted with a single retract statement. The
+   retraction of a fact also removes all rules that depended upon that fact for
+   activation from the agenda. Retraction of a fact may also cause the
+   retraction of other facts which receive logical support from the retracted
+   fact.
+
+   If the facts item is being watched (see section 13.2), then an informational
+   message will be printed each time a fact is retracted.
+
+   The term <retract‑specifier> includes variables bound on the LHS to fact‑
+   addresses as described in section 5.4.1.8, or the fact‑index of the desired
+   fact (e.g. 3 for the fact labeled f‑3), or an expression which evaluates to a
+   retract‑specifier. If the symbol * is used as an argument, all facts will be
+   retracted. Note that the number generally is not known during the execution
+   of a program, so facts usually are retracted by binding them on the LHS of a
+   rule. Only variables, fact indices, or the symbol * may be used in a retract.
+   External functions may not be called. This function has no return value.
+
+   See CLIPS Basic Programming Guide '12.9.2 Removing Facts from the Fact‑list'
+   for more information.
+
+   Syntax:
+     (retract <retract-specifier>+ | *)
+ 
+     <retract-specifier> ::= <fact-specifier> | <integer-expression>
+
+   Doctests:
+   >> (progn
+        (clips:clear)
+        T)
+   T
+   >> (clips:assert (color red))
+   <FACT-1>
+   >> (progn
+        (clips:retract 1)
+        (hash-table-count *working-memory*))
+   1 ; The only one left should be initial-fact
+  "
+  nil)
+
 ;;; Commands
 ;;; ----------------------------------------------------------------------------
 
