@@ -67,12 +67,14 @@
    Syntax:
      (assert <RHS-pattern>+)
 
-   Doctests:
+     <RHS-pattern>      ::= <ordered-RHS-pattern> |
+                            <template-RHS-pattern>
 
+   Doctests:
    >> (progn
-        (clrhash *working-memory*) ; Make sure to reset the working memory
-        (setf *fact-index* 0))     ; before running these tests.
-   0
+        (clips:clear)  ; Make sure to reset the working memory
+        T)             ; before running these tests.
+   T
    >> (clips:assert (color red))
    <FACT-1>
 
