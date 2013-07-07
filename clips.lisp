@@ -146,7 +146,10 @@
         (hash-table-count *working-memory*))
    1 ; The only one left should be initial-fact
   "
-  nil)
+  (mapcar #'(lambda (index)
+	      (remhash index *working-memory*))
+	  retract-specifiers)
+  (values))
 
 ;;; Commands
 ;;; ----------------------------------------------------------------------------
