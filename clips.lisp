@@ -97,8 +97,9 @@
 		       ;; The symbol <FACT-n> does not point to a fact instance
 		       ;; in CLIPS.
 		       `((setf (gethash ,fact-index *working-memory*)
-			       (%make-implied-deftemplate ,(car rhs-pattern)
-							  ,(cdr rhs-pattern)))
+			       (%make-implied-deftemplate
+				,(car rhs-pattern)
+				,(cdr rhs-pattern)))
 			 (defparameter ,(intern (format nil "<FACT-~D>" fact-index))
 			   (gethash ,fact-index *working-memory*))))))
      rhs-patterns)
@@ -248,3 +249,9 @@
 	   *working-memory*)
   (format t "~&For a total of ~D facts." (hash-table-count *working-memory*))
   (values))
+
+;;; Tests
+;;; ----------------------------------------------------------------------------
+
+(defun test-all ()
+  (doctest:test #P"/Users/johanlindberg/Projects/clips/clips.lisp"))
